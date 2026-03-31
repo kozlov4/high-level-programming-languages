@@ -13,11 +13,21 @@ print("===TASK2===")
 
 #task 3
 print("===TASK3===")
-year = int(input("Введіть день народження: "))
-current_year = datetime.now().year
+birthday = (input("Введіть день народження: "))
 
-print(current_year - year)
+birt_date = datetime.strptime(birthday, "%d.%m.%Y")
+today = datetime.now()
+age = today.year - birt_date.year
+
+if (today.month, today.day) < (birt_date.month, birt_date.day):
+        age -= 1
+
+print(today.day, today.month, today.year)
+
+print(age)
+
 print("===TASK3===")
+
 
 #task 4
 print("===TASK4===")
@@ -34,4 +44,5 @@ print("Назва:", book1.title)
 print("Автор:", book1.author)
 print("Рік:", book1.year)
 print("===TASK4===")
+
 
