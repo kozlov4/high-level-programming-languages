@@ -1,4 +1,4 @@
-from datetime import date
+import datetime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey
 
@@ -10,6 +10,6 @@ class ExchangeRate(Base):
 
     buy_rate: Mapped[float] = mapped_column()
     sell_rate: Mapped[float] = mapped_column()
-    date: Mapped[date] = mapped_column()
+    date: Mapped[datetime.date] = mapped_column()
 
     currency: Mapped["Currency"] = relationship(back_populates="exchange_rates")

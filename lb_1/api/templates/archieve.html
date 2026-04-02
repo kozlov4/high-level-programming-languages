@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Архів{% endblock %}
+{% block content %}
+    <h2 class="mb-4">Архів курсів</h2>
+
+    <div class="mb-4 d-flex gap-2">
+        <input type="date" id="datePicker" class="form-control" style="max-width: 250px;">
+        <button id="loadArchiveBtn" class="btn btn-primary">Показати за дату</button>
+    </div>
+
+    <table class="table table-bordered bg-white">
+        <thead>
+            <tr class="table-secondary">
+                <th>Дата</th>
+                <th>Валюта</th>
+                <th>Купівля</th>
+                <th>Продаж</th>
+            </tr>
+        </thead>
+        <tbody id="archive-tbody">
+            <tr><td colspan="4" class="text-center">Оберіть дату та натисніть "Показати"</td></tr>
+        </tbody>
+    </table>
+
+    <script>
+        document.getElementById('loadArchiveBtn').addEventListener('click', function() {
+            const selectedDate = document.getElementById('datePicker').value;
+            const tbody = document.getElementById('archive-tbody');
+            tbody.innerHTML = '<tr><td colspan="4" class="text-center">Завантаження...</td></tr>';
+
+            let url = '/rates/archive/';
+            if (selectedDate) {
+                url += `?rate_date=${selectedDate}`;
+            }
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    tbody.innerHTML = '';
+
+                    if (data.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="4" class="text-center">За обрану дату даних немає.</td></tr>';
+                        return;
+                    }
+
+                    data.forEach(rate => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${rate.date}</td>
+                            <td>${rate.currency.name} (${rate.currency.code})</td>
+                            <td>${rate.buy_rate}</td>
+                            <td>${rate.sell_rate}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                })
+                .catch(error => {
+                    console.error('Помилка:', error);
+                    tbody.innerHTML = '<tr><td colspan="4" class="text-center text-danger">Помилка завантаження даних</td></tr>';
+                });
+        });
+    </script>
+{% endblock %}
